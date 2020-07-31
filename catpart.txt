@@ -1,0 +1,47 @@
+# OPT flag
+  OPT Flag appearance: 
+    -s.                       [property OPTs]
+    (-r|-k) <string s>.       [property OPTrk]
+    -t [integer n].           [property OPTt]
+    -l.                       [property OPTl]
+    not specified.            [single]
+
+  File Size:
+    Empty.                       [property emptyfile][single]
+    One line.                    [property onelinefile][if !(OPTs || OPTrk)]
+    More than one line.          [property manylinefile]
+
+# String s: 
+  String s Length:
+    0.                           [property zerovalue][if OPTrk][error]
+    1.                           [property onevalue][if OPTrk]
+    larger than 1.               [property largervalue][if OPTrk]
+    longer than length of line.  [if !emptyfile && OPTrk][single]
+
+  String s pattern:
+    alphanumeric characters.  [if !(zerovalue) && OPTrk]
+    non-alphanumeric.         [if !(zerovalue) && OPTrk]
+    white spaces only.        [if !(zerovalue && emptyfile) && OPTrk][single]
+
+# n:
+  n Value: 
+    >0.                        [if OPTt]
+    <=0.                       [if !emptyfile && OPTt][error]
+    >length(line).             [if !emptyfile && OPTt][error]
+    omitted.                   [if !emptyfile && OPTt][single]
+
+
+  File Content: 
+    lines contain non-alphanumeric characters only.                   [if !emptyfile && OPTs][single]
+    numbers leading.                                                  [if !(emptyfile && onelinefile) && OPTs && manylinefile]
+    capital letters leading.                                          [if !(emptyfile && onelinefile) && OPTs && manylinefile]
+    lowercase letter leading.                                         [if !(emptyfile && onelinefile) && OPTs && manylinefile] 
+    numbers and captial letters mixed leadings.                       [if !(emptyfile && onelinefile) && OPTs && manylinefile]
+    captial letters and lowercase letters mixed leadings.             [if !(emptyfile && onelinefile) && (OPTs && manylinefile)] 
+    numbers and lowercase letters mixed leadings.                     [if !(emptyfile && onelinefile) && (OPTs && manylinefile)]
+    mixed numerical, lowercase and captial letter leadings.           [if !(emptyfile && onelinefile) && (OPTs && manylinefile)]
+    String s occurs more than once in same line.                      [if !(emptyfile && zerovalue) && OPTrk]
+    String s occurs in multiple lines.                                [if !(emptyfile && onelinefile && zerovalue) && OPTrk && manylinefile]
+    String s not occurrs.                                             [if !(emptyfile && zerovalue) && OPTrk]
+
+
